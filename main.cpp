@@ -69,6 +69,8 @@ int main()
 	int V = 8;
 
 	Grafo grafo(V);
+	
+	cout <<"teste" <<endl;
 
 	// adicionando as arestas
 	grafo.adicionarAresta(0, 1);
