@@ -37,6 +37,8 @@ void Grafo::bfs(int v)
 	int count = adj[0].back();
 	cout << count <<endl;
 
+	cout<< "teste" << endl;
+
 	queue<int> fila;
 	bool visitados[V]; // vetor de visitados
 
