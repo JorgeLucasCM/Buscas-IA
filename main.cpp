@@ -27,10 +27,16 @@ void Grafo::adicionarAresta(int v1, int v2)
 {
 	// adiciona vértice v2 à lista de vértices adjacentes de v1
 	adj[v1].push_back(v2);
+	
 }
 
 void Grafo::bfs(int v)
-{
+{		
+	int count = adj[0].front();
+	cout << count<< endl;
+	int count = adj[0].back();
+	cout << count <<endl;
+
 	queue<int> fila;
 	bool visitados[V]; // vetor de visitados
 
