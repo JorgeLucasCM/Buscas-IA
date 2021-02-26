@@ -67,15 +67,19 @@ public:
 
 	void bfs(Vertice *inicial, Vertice *final){
 		Vertice *atual = inicial;
+		atual->setVisitado();
 		cout << "Iniciando da cidade " << inicial->getNome() << endl;
-		while(true){
+		while(!final->getVisitado()){
 			for(int i = 0 ; i < atual->adj.size(); i++){
 				if(!atual->getAdj(i)->getVisitado()){
 					cout << "Vistando cidade " << atual->getAdj(i)->getNome() << endl;
 					atual->getAdj(i)->setVisitado();
 					fila.push(atual->getAdj(i));
+					if(final->getVisitado())
+						break;	
 				}
-			}	
+			}
+			
 			if(!fila.empty()){
 				atual = fila.front();
 				fila.pop();
@@ -97,7 +101,7 @@ int main(){
 	Vertice *Arad = new Vertice(3,"Arad");
 	Vertice *Timisoara = new Vertice(4,"Timisoara");
 	Vertice *Lugoj = new Vertice(5,"Lugoj");
-	Vertice *Mehadia = new Vertice(6,"Mhadia");
+	Vertice *Mehadia = new Vertice(6,"Mehadia");
 	Vertice *Drobeta = new Vertice(7,"Drobeta");
 	Vertice *Craiova = new Vertice(8,"Craiova");
 	Vertice *Pitesti = new Vertice(9,"Pitesti");
@@ -113,16 +117,78 @@ int main(){
 	Vertice *Iasi = new Vertice(19, "Iasi");
 	Vertice *Neamt = new Vertice(20, "Neamt");
 
+	//Caminhos de Oradea
 	Oradea->addAdj(Zerind,71);	
 	Oradea->addAdj(Sibiu,151);
+	//Caminhos de Zerind
 	Zerind->addAdj(Arad,75);
+	Zerind->addAdj(Oradea,71);
+	//Caminhos de Sibiu
 	Sibiu->addAdj(Fagaras,99);
+	Sibiu->addAdj(RimnicuVilecea,80);
+	Sibiu->addAdj(Oradea,71);
+	Sibiu->addAdj(Arad,140);
+	//Caminhos de Fagaras
+	Fagaras->addAdj(Sibiu,99);
+	Fagaras->addAdj(Bucharest,211);
+	//Caminhos de Rimnicu Vilecea
+	RimnicuVilecea->addAdj(Sibiu,80);
+	RimnicuVilecea->addAdj(Pitesti,97);
+	RimnicuVilecea->addAdj(Craiova,146);
+	//Caminhos de Arad
+	Arad->addAdj(Timisoara,118);
+	Arad->addAdj(Zerind,75);
+	Arad->addAdj(Sibiu,140);
+	//Caminhos de Timisoara
+	Timisoara->addAdj(Arad,118);
+	Timisoara->addAdj(Lugoj,111);
+	//Caminhos de Lugoj
+	Lugoj->addAdj(Timisoara,111);
+	Lugoj->addAdj(Mehadia,70);
+	//Caminhos de Mehadia
+	Mehadia->addAdj(Lugoj,70);
+	Mehadia->addAdj(Drobeta,75);
+	//Caminhos de Dobreta
+	Drobeta->addAdj(Mehadia,75);
+	Drobeta->addAdj(Craiova,120);
+	//Caminhos de Craiova
+	Craiova->addAdj(Drobeta,120);
+	Craiova->addAdj(RimnicuVilecea,146);
+	Craiova->addAdj(Pitesti,138);
+	//Caminhos de Pitesti
+	Pitesti->addAdj(Craiova,138);
+	Pitesti->addAdj(RimnicuVilecea,97);
+	Pitesti->addAdj(Bucharest,101);
+	//Caminhos de Bucharest
+	Bucharest->addAdj(Pitesti,101);
+	Bucharest->addAdj(Fagaras,211);
+	Bucharest->addAdj(Giurgiu,90);
+	Bucharest->addAdj(Urziceni,85);
+	//Caminhos de Urziceni
+	Urziceni->addAdj(Bucharest,85);
+	Urziceni->addAdj(Hirsova,98);
+	Urziceni->addAdj(Vaslui,142);
+	//Caminhos de Giurgiu
+	Giurgiu->addAdj(Bucharest,90);
+	//Caminhos de Hisorva
+	Hirsova->addAdj(Urziceni,98);
+	Hirsova->addAdj(Eforie,86);
+	//Caminhos de Eforie
+	Eforie->addAdj(Hirsova,86);
+	//Caminhos de Vaslui
+	Vaslui->addAdj(Urziceni,142);
+	Vaslui->addAdj(Iasi,92);
+	//Caminhos de Iasi
+	Iasi->addAdj(Vaslui,92);
+	Iasi->addAdj(Neamt,87);
+	//Caminhos de Neam
+	Giurgiu->addAdj(Iasi,87);
 
-	
+
 
 
 	Grafo grafo;
-	grafo.bfs(Oradea, Fagaras);
+	grafo.bfs(Arad, Bucharest);
 
 
 
