@@ -65,8 +65,25 @@ public:
 
 	}
 
-	void bfs(Vertice inical, Vertice final){
-		Vertice atual;
+	void bfs(Vertice inicial, Vertice final){
+		Vertice atual = inicial;
+		cout << "Iniciando da cidade " << inicial.getNome() << endl;
+		while(true){
+			for(int i = 0 ; i < atual.adj.size(); i++){
+				if(!atual.getAdj(i).getVisitado()){
+					cout << "Vistando cidade " << atual.getAdj(i).getNome() << endl;
+					atual.getAdj(i).setVisitado();
+					fila.push(atual.getAdj(i));
+				}
+			}	
+			if(!fila.empty()){
+				atual = fila.front();
+				fila.pop();
+			}else{
+				break;
+			}
+		}
+		cout<< "Chegou ao seu destino! " <<endl;
 	}
 };
 
@@ -96,10 +113,16 @@ int main(){
 	Vertice Iasi(19, "Iasi");
 	Vertice Neamt(20, "Neamt");
 
-	Oradea.addAdj(Zerind,71);
-	Oradea.addAdj(Sibiu,151);
 	Zerind.addAdj(Arad,75);
 	Sibiu.addAdj(Fagaras,99);
+	Oradea.addAdj(Zerind,71);
+	Oradea.addAdj(Sibiu,151);
+	
+	
+
+
+	Grafo grafo;
+	grafo.bfs(Oradea,Fagaras);
 
 
 
