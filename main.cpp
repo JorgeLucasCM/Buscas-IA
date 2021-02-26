@@ -66,7 +66,7 @@ public:
 	}
 
 	void bfs(Vertice inical, Vertice final){
-		
+		Vertice atual;
 	}
 };
 
