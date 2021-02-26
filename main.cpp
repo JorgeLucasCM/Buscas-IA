@@ -189,19 +189,7 @@ int main(){
 
 	Grafo grafo;
 	grafo.bfs(Arad, Bucharest);
-
-
-
-	// Grafo grafo(2);
-
-	// // adicionando as arestas
-	// grafo.adicionarAresta(Oradea,Zerind,71);
-	// grafo.adicionarAresta(Oradea,Sibiu,151);
-	// grafo.adicionarAresta(Zerind,Arad,75);
-	// grafo.adicionarAresta(Sibiu,Fagaras,99);
-
-
-    
+ 
 
 	return 0;
 }
