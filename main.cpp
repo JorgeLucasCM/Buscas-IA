@@ -5,11 +5,16 @@
 using namespace std;
 
 class Vertice{
+public:
 	int indice;
 	string nome;
 	bool visitado = false;
-	
+	vector<Vertice> adj;
+	vector<int> adjDist;
 public:
+	Vertice(){
+
+	}
 	Vertice(int indice,string nome){
 		this-> indice = indice;
 		this-> nome = nome;
@@ -35,66 +40,35 @@ public:
 	void printVertice(){
 		cout << indice << " " << nome << " " << visitado << endl;
 	}
+
+	void addAdj(Vertice v1, int dist){
+		this->adj.push_back(v1);
+		this->adjDist.push_back(dist);
+	}
+
+	Vertice getAdj(int pos){
+		return this->adj[pos];
+	}
+
+
+	int getAdjDist(int pos){
+		return this->adjDist[pos];
+	}
+
 };
 
-// class Grafo{
-// 	vector<Vertice> *adj;
-// 	vector<int> *adjDist;
-// 	int totalVerices=0;
+class Grafo{
+	queue<Vertice> fila;
 
-// public:
-// 	Grafo(int v){
+public:
+	Grafo(){
+
+	}
+
+	void bfs(Vertice inical, Vertice final){
 		
-// 	}
-
-// 	void bfs(Vertice inicio, Vertice fim);
-// 	void adicionarAresta(Vertice v1, Vertice v2, int dist);
-// };
-
-
-// void Grafo::adicionarAresta(Vertice v1, Vertice v2, int dist)
-// {
-// 	adj[v1.getIndice()].push_back(v2);
-// 	adjDist[v1.getIndice()].push_back(dist);
-// 	if(totalVerices <= v1.getIndice())
-// 		totalVerices = v1.getIndice();
-	
-// }
-
-// void Grafo::bfs(Vertice inicio, Vertice fim){
-	
-	// Vertice atual = inicio;
-
-	
-	// queue<Vertice> fila;
-		
-				
-	// while(!fim.getVisitado()){
-	// 	if(!atual.getVisitado()){
-	// 		atual.setVisitado();
-	// 		fila.push(atual);
-	// 	}
-
-	// }
-			
-		// 	adj[*it].
-		// 	if() 
-		// 	{
-		// 		cout << "Visitando vertice " << *it << " ...\n";
-		// 		visitados[*it] = true; // marca como visitado
-		// 		fila.push(*it); // insere na fila
-		// 	}
-		// }
-
-		// // verifica se a fila NÃO está vazia
-		// if(!fila.empty())
-		// {
-		// 	v = fila.front(); // obtém o primeiro elemento
-		// 	fila.pop(); // remove da fila
-		// }
-		// else
-
-// }
+	}
+};
 
 
 
@@ -122,6 +96,11 @@ int main(){
 	Vertice Iasi(19, "Iasi");
 	Vertice Neamt(20, "Neamt");
 
+	Oradea.addAdj(Zerind,71);
+	Oradea.addAdj(Sibiu,151);
+	Zerind.addAdj(Arad,75);
+	Sibiu.addAdj(Fagaras,99);
+
 
 
 	// Grafo grafo(2);
@@ -133,11 +112,6 @@ int main(){
 	// grafo.adicionarAresta(Sibiu,Fagaras,99);
 
 
-	Oradea.printVertice();
-	Zerind.printVertice();
-	Sibiu.printVertice();
-	Arad.printVertice();
-	Fagaras.printVertice();
     
 
 	return 0;
