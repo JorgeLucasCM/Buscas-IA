@@ -1,95 +1,144 @@
 #include <iostream>
-#include <list>
-#include <queue> // fila para usar na BFS 
+#include <vector>
+#include <queue> 
 
 using namespace std;
 
-class Grafo
-{
-	int V; // número de vértices
-	list<int> *adj; // ponteiro para um array contendo as listas de adjacências
-
+class Vertice{
+	int indice;
+	string nome;
+	bool visitado = false;
+	
 public:
-	Grafo(int V); // construtor
-	void adicionarAresta(int v1, int v2); // adiciona uma aresta no grafo
+	Vertice(int indice,string nome){
+		this-> indice = indice;
+		this-> nome = nome;
+	}
 
-	// faz uma BFS a partir de um vértice
-	void bfs(int v);
+	string getNome(){
+
+		return this->nome;
+	}
+
+	int getIndice(){
+		return this->indice;
+	}
+
+	void setVisitado(){
+		this->visitado = true;
+	}
+
+	bool getVisitado(){
+		return this->visitado;
+	}
+
+	void printVertice(){
+		cout << indice << " " << nome << " " << visitado << endl;
+	}
 };
 
-Grafo::Grafo(int V)
-{
-	this-> V = V; // atribui o número de vértices
-	adj = new list<int>[V]; // cria as listas
-}
+// class Grafo{
+// 	vector<Vertice> *adj;
+// 	vector<int> *adjDist;
+// 	int totalVerices=0;
 
-void Grafo::adicionarAresta(int v1, int v2)
-{
-	// adiciona vértice v2 à lista de vértices adjacentes de v1
-	adj[v1].push_back(v2);
+// public:
+// 	Grafo(int v){
+		
+// 	}
+
+// 	void bfs(Vertice inicio, Vertice fim);
+// 	void adicionarAresta(Vertice v1, Vertice v2, int dist);
+// };
+
+
+// void Grafo::adicionarAresta(Vertice v1, Vertice v2, int dist)
+// {
+// 	adj[v1.getIndice()].push_back(v2);
+// 	adjDist[v1.getIndice()].push_back(dist);
+// 	if(totalVerices <= v1.getIndice())
+// 		totalVerices = v1.getIndice();
 	
-}
+// }
 
-void Grafo::bfs(int v)
-{		
-	int count = adj[0].front();
-	cout << count<< endl;
-	int count = adj[0].back();
-	cout << count <<endl;
-
-	cout<< "teste" << endl;
-
-	queue<int> fila;
-	bool visitados[V]; // vetor de visitados
-
-	for(int i = 0; i < V; i++)
-		visitados[i] = false;
-
-	cout << "Visitando vertice " << v << " ...\n";
-	visitados[v] = true; // marca como visitado
-
-	while(true)
-	{
-		list<int>::iterator it;
-		for(it = adj[v].begin(); it != adj[v].end(); it++)
-		{
-			if(!visitados[*it])
-			{
-				cout << "Visitando vertice " << *it << " ...\n";
-				visitados[*it] = true; // marca como visitado
-				fila.push(*it); // insere na fila
-			}
-		}
-
-		// verifica se a fila NÃO está vazia
-		if(!fila.empty())
-		{
-			v = fila.front(); // obtém o primeiro elemento
-			fila.pop(); // remove da fila
-		}
-		else
-			break;
-	}
-}
-
-int main()
-{
-	int V = 8;
-
-	Grafo grafo(V);
+// void Grafo::bfs(Vertice inicio, Vertice fim){
 	
-	cout <<"teste" <<endl;
+	// Vertice atual = inicio;
 
-	// adicionando as arestas
-	grafo.adicionarAresta(0, 1);
-	grafo.adicionarAresta(0, 2);
-	grafo.adicionarAresta(1, 3);
-	grafo.adicionarAresta(1, 4);
-	grafo.adicionarAresta(2, 5);
-	grafo.adicionarAresta(2, 6);
-	grafo.adicionarAresta(6, 7);
+	
+	// queue<Vertice> fila;
+		
+				
+	// while(!fim.getVisitado()){
+	// 	if(!atual.getVisitado()){
+	// 		atual.setVisitado();
+	// 		fila.push(atual);
+	// 	}
+
+	// }
+			
+		// 	adj[*it].
+		// 	if() 
+		// 	{
+		// 		cout << "Visitando vertice " << *it << " ...\n";
+		// 		visitados[*it] = true; // marca como visitado
+		// 		fila.push(*it); // insere na fila
+		// 	}
+		// }
+
+		// // verifica se a fila NÃO está vazia
+		// if(!fila.empty())
+		// {
+		// 	v = fila.front(); // obtém o primeiro elemento
+		// 	fila.pop(); // remove da fila
+		// }
+		// else
+
+// }
+
+
+
+
+int main(){
+	//Adicionando Vertices
+	Vertice Oradea(1,"Oradea");
+	Vertice Zerind(2,"Zerind");
+	Vertice Arad(3,"Arad");
+	Vertice Timisoara(4,"Timisoara");
+	Vertice Lugoj(5,"Lugoj");
+	Vertice Mehadia(6,"Mhadia");
+	Vertice Drobeta(7,"Drobeta");
+	Vertice Craiova(8,"Craiova");
+	Vertice Pitesti(9,"Pitesti");
+	Vertice RimnicuVilecea(10,"RimnicuVilecea");
+	Vertice Sibiu(11,"Sibiu");
+	Vertice Fagaras(12,"Fagaras");
+	Vertice Bucharest(13,"Bucharest");
+	Vertice Giurgiu(14,"Giurgiu");
+	Vertice Urziceni(15,"Urziceni");
+	Vertice Hirsova(16, "Hirsova");
+	Vertice Eforie(17, "Eforie");
+	Vertice Vaslui(18, "Vaslui");
+	Vertice Iasi(19, "Iasi");
+	Vertice Neamt(20, "Neamt");
+
+
+
+	// Grafo grafo(2);
+
+	// // adicionando as arestas
+	// grafo.adicionarAresta(Oradea,Zerind,71);
+	// grafo.adicionarAresta(Oradea,Sibiu,151);
+	// grafo.adicionarAresta(Zerind,Arad,75);
+	// grafo.adicionarAresta(Sibiu,Fagaras,99);
+
+
+	Oradea.printVertice();
+	Zerind.printVertice();
+	Sibiu.printVertice();
+	Arad.printVertice();
+	Fagaras.printVertice();
     
-	grafo.bfs(0);
 
 	return 0;
 }
