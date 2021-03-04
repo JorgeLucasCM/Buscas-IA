@@ -88,6 +88,13 @@ public:
 			}
 		}
 		cout<< "Chegou ao seu destino! " <<endl;
+		queue<Vertice*> fila_ex = fila;
+		cout << "Borda: ";
+		while(!fila_ex.empty()){
+			cout << fila_ex.front()->getNome() << ", ";
+			fila_ex.pop();
+		}
+		cout << endl;
 	}
 };
 
@@ -181,7 +188,7 @@ int main(){
 	//Caminhos de Iasi
 	Iasi->addAdj(Vaslui,92);
 	Iasi->addAdj(Neamt,87);
-	//Caminhos de Neam
+	//Caminhos de Giugiu
 	Giurgiu->addAdj(Iasi,87);
 
 
