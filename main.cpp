@@ -59,6 +59,8 @@ public:
 
 class Grafo{
 	queue<Vertice*> fila;
+	queue<Vertice*> borda;
+	vector<Vertice*> explorados;
 
 public:
 	Grafo(){
@@ -68,7 +70,9 @@ public:
 	void bfs(Vertice *inicial, Vertice *final){
 		Vertice *atual = inicial;
 		atual->setVisitado();
-		cout << "Iniciando da cidade " << inicial->getNome() << endl;
+		cout << "Iniciando Busca de rota " << endl;
+		cout << "Rota: de Cidade " << inicial->getNome() << " ate Cidade " << final->getNome() << endl;
+		cout << "Iniciando a partir da cidade " << inicial->getNome() << endl;
 		while(!final->getVisitado()){
 			for(int i = 0 ; i < atual->adj.size(); i++){
 				if(!atual->getAdj(i)->getVisitado()){
@@ -96,9 +100,71 @@ public:
 		}
 		cout << endl;
 	}
+
+	bool contido_borda(Vertice* v1, queue<Vertice*> borda){
+		queue <Vertice *> fila_aux = borda;
+		for(int  i = 0; i < borda.size(); i++){
+			if(v1 == fila_aux.front())
+				return true;
+			else
+				fila_aux.pop();
+		}
+		return false;
+	}
+
+	bool contido_explorados(Vertice* v1, vector<Vertice*> explorados) {
+		for(int  i = 0; i < explorados.size(); i++){
+			if(v1 == explorados[i])
+				return true;
+		}
+		return false;
+	}
+
+
+	void busca_em_largura(Vertice *inicial, Vertice *final) {
+		Vertice *atual = inicial;
+		if(atual == final){
+				return;
+		}
+		borda.push(inicial);
+		explorados.clear();
+		while(true){
+			if(borda.empty()){
+				return;
+			}
+			atual = borda.front();
+			borda.pop();
+			explorados.push_back(atual);
+			for(int i=0; i < atual->adj.size(); i++){
+				if((contido_explorados(atual->adj[i], explorados) == false) || (contido_borda(atual->adj[i],borda) == true)){
+					if(atual->adj[i] == final)
+						return;
+					borda.push(atual->adj[i]);
+				}else{
+					continue;
+				}	
+			}
+		}
+	}
+
+	void mostrarExplorado(){
+		cout << "Explorados: ";
+		for(int i=0; i < explorados.size(); i ++){
+			cout << explorados[i]->getNome() << " ";
+		}
+		cout << endl;
+	}
+
+	void mostrarBorda(){
+		queue<Vertice *> fila_aux = borda;
+		cout << "Bordas: ";
+		for(int  i  = 0; i < borda.size(); i++){
+			cout << fila_aux.front()->getNome() << " ";
+			fila_aux.pop();
+		}
+		cout << endl;
+	}
 };
-
-
 
 
 int main(){
@@ -192,11 +258,12 @@ int main(){
 	Giurgiu->addAdj(Iasi,87);
 
 
-
-
 	Grafo grafo;
-	grafo.bfs(Arad, Bucharest);
- 
+	// grafo.bfs(Arad, Bucharest);
+	grafo.busca_em_largura(Arad, Oradea);
+	grafo.mostrarExplorado();
+	grafo.mostrarBorda();
 
+	
 	return 0;
 }
