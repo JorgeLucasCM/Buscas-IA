@@ -9,6 +9,9 @@ public:
 	int indice;
 	string nome;
 	bool visitado = false;
+	int heuristica = 0;
+	int aux_heu =0;
+	int g_de_n =0;
 	vector<Vertice*> adj;
 	vector<int> adjDist;
 public:
@@ -55,16 +58,61 @@ public:
 		return this->adjDist[pos];
 	}
 
+	void setHeuristica(int heuristica){
+		this->heuristica = heuristica;
+	}
+
+	int getHeuristca(){
+		return this->heuristica;
+	}
+
+	int getG_de_N(){
+		return this->g_de_n;
+	}
+
+	void setG_de_N(int g_de_n){
+		this->g_de_n = g_de_n;
+	}
+
+	int getAux_Heu(){
+		return this->aux_heu;
+	}
+
+	void setAux_Heu(int aux_heu){
+		this->aux_heu = aux_heu;
+	}
+
 };
 
 class Grafo{
-	queue<Vertice*> fila;
-	queue<Vertice*> borda;
-	vector<Vertice*> explorados;
+	public: queue<Vertice*> fila;
+	public: queue<Vertice*> borda;
+	public: vector<Vertice*> explorados;
+	public: vector<Vertice*> bordaA;
 
 public:
 	Grafo(){
 
+	}
+
+	void ordernarBordaA(){
+		int maior = 0, ind_maior = 0;
+		int tam = bordaA.size();
+		vector<Vertice*> aux_vector = bordaA;
+		bordaA.clear();
+		for (int i = 0; i < tam; i++){
+			maior=0;
+			for(int j = 0; j < aux_vector.size(); j++){
+				if( aux_vector[j]->getHeuristca() > maior){
+					maior = aux_vector[j]->getHeuristca();
+					ind_maior = j;
+				}
+			}
+			bordaA.push_back(aux_vector[ind_maior]);
+			swap(aux_vector[ind_maior],aux_vector.back());
+			aux_vector.pop_back();
+		}
+		
 	}
 
 	void bfs(Vertice *inicial, Vertice *final){
@@ -120,28 +168,44 @@ public:
 		return false;
 	}
 
+	bool contido_bordaA(Vertice* v1, vector<Vertice*> bordaA) {
+		for(int  i = 0; i < bordaA.size(); i++){
+			if(v1 == bordaA[i])
+				return true;
+		}
+		return false;
+	}
+
+	bool bordaAComMaiorValor(Vertice * v1, int aux_heu){
+		for(int i=0; i < bordaA.size(); i++){
+			if(bordaA[i] == v1){
+				if(bordaA[i]->getHeuristca() > aux_heu){
+					return true;
+				}
+			}
+		}
+		return false;
+	}
 
 	void busca_em_largura(Vertice *inicial, Vertice *final) {
-		Vertice *atual = inicial;
-		if(atual == final){
-				return;
-		}
+		Vertice *atual;
 		borda.push(inicial);
 		explorados.clear();
 		while(true){
+			cout << endl;
 			if(borda.empty()){
 				return;
 			}
 			atual = borda.front();
+			//cout << atual->getNome() << endl;
 			borda.pop();
 			explorados.push_back(atual);
 			for(int i=0; i < atual->adj.size(); i++){
-				if((contido_explorados(atual->adj[i], explorados) == false) || (contido_borda(atual->adj[i],borda) == true)){
+				if((contido_explorados(atual->adj[i], explorados) == false) && (contido_borda(atual->adj[i],borda) == false)){
 					if(atual->adj[i] == final)
 						return;
-					borda.push(atual->adj[i]);
-				}else{
-					continue;
+					else
+						borda.push(atual->adj[i]);
 				}	
 			}
 		}
@@ -155,7 +219,18 @@ public:
 		cout << endl;
 	}
 
+	void mostrarBordaA(){
+		cout << "Borda A: ";
+		for(int i=0; i < bordaA.size(); i++){
+			cout << bordaA[i]->getNome() << " ";
+		}
+		cout << endl;
+	}
+
+	
+
 	void mostrarBorda(){
+
 		queue<Vertice *> fila_aux = borda;
 		cout << "Bordas: ";
 		for(int  i  = 0; i < borda.size(); i++){
@@ -164,31 +239,62 @@ public:
 		}
 		cout << endl;
 	}
+
+	void busca_aEstrela(Vertice *inicial, Vertice *final){
+		Vertice *atual;
+		bordaA.push_back(inicial);
+		explorados.clear();
+		while(true){
+			if(bordaA.empty()){
+				return;
+			}
+			atual = bordaA.back();
+			bordaA.pop_back();
+			if(atual == final){
+				return;
+			}
+			explorados.push_back(atual);
+			for(int i=0; i < atual->adj.size(); i++){
+				if((contido_explorados(atual->adj[i], explorados) == false) && (contido_bordaA(atual->adj[i],bordaA) == false)){
+					atual->adj[i]->setG_de_N(atual->getG_de_N() + atual->adjDist[i]);
+					atual->adj[i]->setHeuristica(atual->adj[i]->getIndice() + atual->adj[i]->getG_de_N());
+					bordaA.push_back(atual->adj[i]);
+					ordernarBordaA();
+				}else if(bordaAComMaiorValor(atual->adj[i], atual->getG_de_N() + atual->adjDist[i] + atual->adj[i]->getIndice())){
+					atual->adj[i]->setG_de_N(atual->getG_de_N() + atual->adjDist[i]);
+					atual->adj[i]->setHeuristica(atual->adj[i]->getIndice() + atual->adj[i]->getG_de_N());
+					ordernarBordaA();
+			
+				}	
+			}	
+		}
+	}
+
 };
 
 
 int main(){
 	//Adicionando Vertices
-	Vertice *Oradea  = new Vertice(1,"Oradea");
-	Vertice *Zerind = new Vertice(2,"Zerind");
-	Vertice *Arad = new Vertice(3,"Arad");
-	Vertice *Timisoara = new Vertice(4,"Timisoara");
-	Vertice *Lugoj = new Vertice(5,"Lugoj");
-	Vertice *Mehadia = new Vertice(6,"Mehadia");
-	Vertice *Drobeta = new Vertice(7,"Drobeta");
-	Vertice *Craiova = new Vertice(8,"Craiova");
-	Vertice *Pitesti = new Vertice(9,"Pitesti");
-	Vertice *RimnicuVilecea = new Vertice(10,"RimnicuVilecea");
-	Vertice *Sibiu = new Vertice(11,"Sibiu");
-	Vertice *Fagaras = new Vertice(12,"Fagaras");
-	Vertice *Bucharest = new Vertice(13,"Bucharest");
-	Vertice *Giurgiu = new Vertice(14,"Giurgiu");
-	Vertice *Urziceni = new Vertice(15,"Urziceni");
-	Vertice *Hirsova = new Vertice(16, "Hirsova");
-	Vertice *Eforie = new Vertice(17, "Eforie");
-	Vertice *Vaslui = new Vertice(18, "Vaslui");
-	Vertice *Iasi = new Vertice(19, "Iasi");
-	Vertice *Neamt = new Vertice(20, "Neamt");
+	Vertice *Oradea  = new Vertice(380,"Oradea");
+	Vertice *Zerind = new Vertice(374,"Zerind");
+	Vertice *Arad = new Vertice(366,"Arad");
+	Vertice *Timisoara = new Vertice(329,"Timisoara");
+	Vertice *Lugoj = new Vertice(244,"Lugoj");
+	Vertice *Mehadia = new Vertice(241,"Mehadia");
+	Vertice *Drobeta = new Vertice(242,"Drobeta");
+	Vertice *Craiova = new Vertice(160,"Craiova");
+	Vertice *Pitesti = new Vertice(100,"Pitesti");
+	Vertice *RimnicuVilecea = new Vertice(193,"RimnicuVilecea");
+	Vertice *Sibiu = new Vertice(253,"Sibiu");
+	Vertice *Fagaras = new Vertice(176,"Fagaras");
+	Vertice *Bucharest = new Vertice(0,"Bucharest");
+	Vertice *Giurgiu = new Vertice(77,"Giurgiu");
+	Vertice *Urziceni = new Vertice(80,"Urziceni");
+	Vertice *Hirsova = new Vertice(151, "Hirsova");
+	Vertice *Eforie = new Vertice(161, "Eforie");
+	Vertice *Vaslui = new Vertice(199, "Vaslui");
+	Vertice *Iasi = new Vertice(226, "Iasi");
+	Vertice *Neamt = new Vertice(234, "Neamt");
 
 	//Caminhos de Oradea
 	Oradea->addAdj(Zerind,71);	
@@ -257,12 +363,30 @@ int main(){
 	//Caminhos de Giugiu
 	Giurgiu->addAdj(Iasi,87);
 
+	// Giurgiu->setHeuristica(500);
+	// Oradea->setHeuristica(230);
+	// Iasi->setHeuristica(31);
+	// Hirsova->setHeuristica(151);
 
 	Grafo grafo;
-	// grafo.bfs(Arad, Bucharest);
-	grafo.busca_em_largura(Arad, Oradea);
+
+	// grafo.bordaA.push_back(Giurgiu);
+	// grafo.bordaA.push_back(Oradea);
+	// grafo.bordaA.push_back(Iasi);
+	// grafo.bordaA.push_back(Hirsova);
+
+	// grafo.mostrarBordaA();
+
+	// grafo.ordernarBordaA();
+
+	// grafo.mostrarBordaA();
+
+
+	// grafo.busca_em_largura(Fagaras, Timisoara);
+	grafo.busca_aEstrela(Hirsova, Bucharest);
 	grafo.mostrarExplorado();
-	grafo.mostrarBorda();
+	// grafo.mostrarBorda();
+	grafo.mostrarBordaA();
 
 	
 	return 0;
